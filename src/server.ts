@@ -1,5 +1,6 @@
 import express from 'express';
-import puppeteer from 'puppeteer';
+import chromium from 'chrome-aws-lambda';
+import puppeteer from 'puppeteer-core';
 import cors from 'cors';
 
 const app = express();
@@ -23,11 +24,13 @@ app.get('/screenshot', async (req, res) => {
   let browser;
   try {
     browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      args: chromium.args,
+      executablePath: await chromium.executablePath,
+      headless: chromium.headless,
     });
     const page = await browser.newPage();
     await page.goto(url, { waitUntil: 'networkidle2' });
-    const screenshot = await page.screenshot({ encoding: 'base64' });
+    const screenshot: any = await page.screenshot({ encoding: 'base64' });
 
     res.set('Content-Type', 'image/png');
     res.send(Buffer.from(screenshot, 'base64'));
