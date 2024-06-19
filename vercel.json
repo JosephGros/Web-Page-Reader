@@ -1,0 +1,10 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "screenshot.ts",
+        "use": "@vercel/node"
+      }
+    ]
+  }
+  
