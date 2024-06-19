@@ -6,12 +6,12 @@ const app = express();
 const PORT = 3000;
 
 app.use(
-    cors({
-      origin: "*",
-      methods: ["GET", "POST", "PUT", "DELETE"],
-      credentials: true,
-    })
-  );
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 app.get('/screenshot', async (req, res) => {
   const url = req.query.url as string;
@@ -22,15 +22,18 @@ app.get('/screenshot', async (req, res) => {
 
   let browser;
   try {
-    browser = await puppeteer.launch();
+    browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
     const page = await browser.newPage();
     await page.goto(url, { waitUntil: 'networkidle2' });
     const screenshot = await page.screenshot({ encoding: 'base64' });
 
     res.set('Content-Type', 'image/png');
     res.send(Buffer.from(screenshot, 'base64'));
-  } catch (error) {
-    res.status(500).send('Error capturing screenshot');
+  } catch (error: any) {
+    console.error('Error capturing screenshot:', error);
+    res.status(500).send(`Error capturing screenshot: ${error.message}`);
   } finally {
     if (browser) {
       await browser.close();
@@ -39,5 +42,5 @@ app.get('/screenshot', async (req, res) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
