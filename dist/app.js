@@ -16,7 +16,6 @@ const express_1 = __importDefault(require("express"));
 const puppeteer_1 = __importDefault(require("puppeteer"));
 const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
-const PORT = 3000;
 app.use((0, cors_1.default)({
     origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
@@ -45,6 +44,3 @@ app.get('/screenshot', (req, res) => __awaiter(void 0, void 0, void 0, function*
         }
     }
 }));
-app.listen(PORT, () => {
-    console.log(`Server is running on port http://localhost:${PORT}`);
-});
