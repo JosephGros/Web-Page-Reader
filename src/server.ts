@@ -23,7 +23,8 @@ app.get('/screenshot', async (req, res) => {
   let browser;
   try {
     browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        executablePath: puppeteer.executablePath()
     });
     const page = await browser.newPage();
     await page.goto(url, { waitUntil: 'networkidle2' });
